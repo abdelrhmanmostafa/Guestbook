@@ -17,25 +17,39 @@
     background-color: white;
 }
 
-.form{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    height: 90%;
-    padding-top: 20px;
-}
-
-.in{
-    width: 50%;
-}
-
-.form button{
+.button{
     width: 110px;
     height: 35px;
     background-color: rgb(15, 2, 22);
     color: white;
     border: 1px solid;
-    border-radius: 10px
+    border-radius: 10px;
+    margin: 10px 10px;
+}
+
+.p{
+    font-weight: bold;
+    height:px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+
+.links{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 250px;
+}
+
+.form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.disabled{
+    background-color: #ccc;
+    border: 1px solid #ccc;
 }

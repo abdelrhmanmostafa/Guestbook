@@ -1,0 +1,33 @@
+.input{
+    width: 60%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.label{
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.ele{
+    outline: none;
+    border: 1px solid #ccc;
+    background-color: white;
+    font: inherit;
+    padding: 6px 10px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ele:focus{
+    outline: none;
+    border: 1px solid rgb(39, 105, 230);
+    background-color: rgb(230, 230, 230);
+}
+
+.invalid{
+    border: 1px solid red;
+    background-color: #FDA49A;
+}
