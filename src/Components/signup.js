@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import {withRouter} from 'react-router-dom'
 
 import * as styles from './signup.module.css'
 import Input from './input'
 import Spinner from './Spinner'
+import Axios from 'axios'
 
 class signup extends Component {
     state = {
@@ -56,6 +58,11 @@ class signup extends Component {
         for (let formElementIdentifier in this.state.Form) {
             formData[formElementIdentifier] = this.state.Form[formElementIdentifier].value;
         }
+        Axios.post('http://localhost:4000/users', formData).then(res =>{
+            this.props.auth()
+            localStorage.setItem('user',JSON.stringify(res.data))
+            this.props.history.push('/home')
+        })
     }
     checkValidity(value, rules) {
         let isValid = true;
@@ -87,8 +94,8 @@ class signup extends Component {
         updatedForm[inputIdentifier] = updatedFormElement;
         
         let formIsValid = true;
-        for (let inputIdentifier in updatedForm) {
-            formIsValid = updatedForm[inputIdentifier].valid && formIsValid;
+        for (let ii in updatedForm) {
+            formIsValid = updatedForm[ii].valid && formIsValid;
         }
         this.setState({Form: updatedForm, formIsValid: formIsValid});
     }
@@ -117,7 +124,7 @@ class signup extends Component {
                             touched={formElement.config.touched}
                             onChange={(event) => this.inputChangedHandler(event, formElement.id)} />
                     ))}
-                    <button className={buttonstyle.join(' ')} disabled={!this.state.formIsValid}>Creat</button>
+                    <button className={buttonstyle.join(' ')} disabled={!this.state.formIsValid}>Create</button>
                     <div className={styles.links}>
                         <p>already have an account</p>
                         <a href="/login">login</a>
@@ -136,4 +143,4 @@ class signup extends Component {
     }
 }
 
-export default signup
+export default withRouter(signup)

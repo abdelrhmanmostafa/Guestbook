@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-
+import axios from 'axios'
+import {withRouter} from 'react-router-dom'
 import * as styles from './login.module.css'
 
 class login extends Component {
@@ -12,7 +13,16 @@ class login extends Component {
           this.setState({email: e.target.value})
         else
           this.setState({password: e.target.value})
-      }
+    }
+    Login = () =>{
+        axios.post('http://localhost:4000/users/login', {email: this.state.email, password: this.state.password}).then(res =>{
+            this.props.auth()
+            localStorage.setItem('user',JSON.stringify(res.data))
+            this.props.history.push('/home')
+        }).catch((e) =>{
+            console.log({e})
+        })
+    }
     render(){
         return(
             <div className={styles.page}>
@@ -31,7 +41,7 @@ class login extends Component {
                     <a href="/signup">here</a>
                 </div>
                 <button 
-                onClick={() => this.props.Login({email: this.props.email, pass: this.props.password})}>
+                onClick={this.Login}>
                     Log In
                 </button>
             </div>
@@ -39,4 +49,4 @@ class login extends Component {
     }
 }
 
-export default login
+export default withRouter(login)

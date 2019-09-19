@@ -12,14 +12,25 @@ import * as styles from './App.module.css';
 class App extends Component {
   state = {
     token:"",
-    authenticated: true
+    authenticated: false
+  }
+  HandleAuth = () =>{
+    this.setState({authenticated: true})
+    localStorage.setItem('auth',JSON.stringify(this.state))
+  }
+  componentWillMount = () => {
+    const auth = localStorage.getItem('auth')
+    if(auth) {
+      const {authenticated,token} = JSON.parse(auth)
+      this.setState({authenticated,token})
+    }
   }
   render(){
     return(
       <div className={styles.app}>
         <Route path="/" exact component={Landing} />
-        <Route path="/login" exact component={Login} />
-        <Route path="/signup" exact component={Signup} />
+        <Route path="/login" exact render={() => <Login auth={this.HandleAuth} />} />
+        <Route path="/signup" exact render={() => <Signup auth={this.HandleAuth} />} />
         <Private path='/home' exact component={Home} authenticated={this.state.authenticated} />
       </div>
     )

@@ -1,5 +1,6 @@
 require('./config/config')
 
+var {mongoose} = require('./mongoose')
 var {Message} = require('./models/message')
 var {User} = require('./models/user')
 
@@ -14,21 +15,21 @@ var app = express()
 
 app.use(cors())
 app.use(bodyparser.json())
-app.use((req, res, next) =>{
+/*app.use((req, res, next) =>{
     var now = new Date().toString()
     fs.appendFile('./backEnd/server/server.log', `${now}: ${req.method}, ${req.url} \n`, (err) =>{
         if(err)
             console.log('logging error')
     })
     next()
-})
+})*/
 
 let Authenticate = (req, res, next) =>{
-    User.findByToken(req.header('x-auth')).then((user) =>{
+    User.findByToken(req.header('x_auth')).then((user) =>{
         if(!user)
             return Promise.reject()
         req.user = user
-        req.token = req.header('x-auth')
+        req.token = req.header('x_auth')
         next()
     }).catch((e) =>{
         res.status(401).send()
@@ -106,7 +107,7 @@ app.patch('/messages/:id', Authenticate, (req, res) =>{
 app.post('/users',(req, res) =>{
     let user = new User(_.pick(req.body, ['email', 'password', 'name']))
     user.generateAuthtoken().then((token) =>{
-        res.header('x-auth', token).send(user)
+        res.send({user, token})
     }).catch((e)=>{
         res.status(400).send(e)
     })
@@ -120,7 +121,7 @@ app.post('/users/login', (req, res) =>{
     let body = _.pick(req.body, ['email', 'password'])
     User.findByCredentials(body.email, body.password).then((user) =>{
         return user.generateAuthtoken().then((token) =>{
-            res.header('x-auth', token).send(user)
+            res.send({user, token})
         })
     }).catch((e) =>{
         res.status(400).send()

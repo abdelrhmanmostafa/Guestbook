@@ -3,12 +3,12 @@ import { Route, Redirect } from 'react-router-dom'
 
 class Private extends Component{
     render(){
-        const { component: Component, ...props} = this.props
+        const { component: CustomComponent, ...props} = this.props
         return(
             <Route
                 {...props}
                 render = {props =>(
-                    this.props.authenticated ? <Component {...props} /> : <Redirect to="/login" />
+                    this.props.authenticated ? <CustomComponent {...props} /> : <Redirect to="/login" />
                 )} />
         )
     }
