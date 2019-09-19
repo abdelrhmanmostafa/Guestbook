@@ -1,7 +1,6 @@
 require('./config/config')
 
-var {mongoose} = require('./mongoose')
-var {Todo} = require('./models/todo')
+var {Message} = require('./models/message')
 var {User} = require('./models/user')
 
 const express = require('express')
@@ -10,7 +9,6 @@ const cors = require('cors')
 const fs = require('fs')
 const {ObjectID} = require('mongodb')
 const _ = require('lodash')
-const bcrypt = require('bcryptjs')
 
 var app = express()
 
@@ -37,34 +35,37 @@ let Authenticate = (req, res, next) =>{
     })
 }
 
-app.post('/todos', Authenticate, (req, res) =>{
-    var todo = new Todo({
-        text: req.body.text,
+app.post('/messages', Authenticate, (req, res) =>{
+    var message = new Message({
+        title: req.body.title,
+        body: req.body.body,
+        sendTo: req.body.sendto,
+        sentAt: req.body.sentat,
         user: req.user._id
     })
-    todo.save().then((doc) =>{
+    message.save().then((doc) =>{
         res.send(doc)
     }, (e)=>{
         res.status(400).send(e)
     })
 })
 
-app.get('/todos', Authenticate, (req, res) =>{
-    Todo.find({user: req.user._id}).then((data) => {
+app.get('/messages', Authenticate, (req, res) =>{
+    Message.find({user: req.user._id}).then((data) => {
         res.send(data)
     }).catch((e)=>{
         res.status(400).send(e)
     })
 })
 
-app.get('/todos/:id', Authenticate, (req, res) =>{
+app.get('/messages/:id', Authenticate, (req, res) =>{
     let id = req.params.id
     if(!ObjectID.isValid(id))
         res.status(404).send()
     else{
-        Todo.findOne({_id: id, user: req.user._id}).then((todo) =>{
-            if(todo)
-                res.send(todo)
+        Message.findOne({_id: id, user: req.user._id}).then((message) =>{
+            if(message)
+                res.send(message)
             else
                 res.status(404).send()
         },(e) =>{
@@ -73,34 +74,28 @@ app.get('/todos/:id', Authenticate, (req, res) =>{
     }
 })
 
-app.delete('/todos/:id', Authenticate, (req, res) =>{
+app.delete('/messages/:id', Authenticate, (req, res) =>{
     let id = req.params.id
     if(!ObjectID.isValid(id))
         return res.status(404).send()
-    Todo.findOneAndDelete({_id: id, user: req.user._id}).then((todo) =>{
-        if(!todo)
+    Message.findOneAndDelete({_id: id, user: req.user._id}).then((message) =>{
+        if(!message)
             return res.status(404).send()
-        res.send(todo)
+        res.send(message)
     }, (e) =>{
         res.status(404).send()
     })
 })
 
-app.patch('/todos/:id', Authenticate, (req, res) =>{
+app.patch('/messages/:id', Authenticate, (req, res) =>{
     let id = req.params.id
-    let body = _.pick(req.body, ['text', 'completed'])
+    let body = _.pick(req.body, ['title', 'body', 'sendto', 'sentat'])
     if(!ObjectID.isValid(id))
         return res.status(404).send()
-    if(_.isBoolean(body.completed) && body.completed)
-        body.completedAt = new Date().getTime()
-    else{
-        body.completed = false
-        body.completedAt = null
-    }
-    Todo.findOneAndUpdate({_id: id, user: req.user._id}, {$set: body}, {new: true}).then((todo) =>{
-        if(!todo)
+    Message.findOneAndUpdate({_id: id, user: req.user._id}, {$set: body}, {new: true}).then((message) =>{
+        if(!message)
             return res.status(404).send()
-        res.send(todo)
+        res.send(message)
     }).catch((e) =>{
         res.status(400).send()
     })
@@ -109,14 +104,7 @@ app.patch('/todos/:id', Authenticate, (req, res) =>{
 //User Routes
 
 app.post('/users',(req, res) =>{
-    let user = new User(_.pick(req.body, ['email', 'password']))
-    /*user.save().then(() =>{
-        return user.generateAuthtoken()
-    }).then((token) =>{
-        res.header('x-auth', token).send(user)
-    }).catch((e)=>{
-        res.status(400).send(e)
-    })*/
+    let user = new User(_.pick(req.body, ['email', 'password', 'name']))
     user.generateAuthtoken().then((token) =>{
         res.header('x-auth', token).send(user)
     }).catch((e)=>{
@@ -139,7 +127,7 @@ app.post('/users/login', (req, res) =>{
     })
 })
 
-app.delete('/users/me/token', Authenticate, (req, res) =>{
+app.delete('/users/logout', Authenticate, (req, res) =>{
     req.user.deleteToken(req.token).then(() =>{
         res.send()
     }).catch((e) => res.status(400).send())
