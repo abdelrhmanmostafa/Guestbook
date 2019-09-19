@@ -1,0 +1,12 @@
+{
+    "test": {
+        "PORT": 3000,
+        "MONGODB_URI": "mongodb://localhost:27017/GuestBookTest",
+        "JWT_SALT": "guestBook app"
+    },
+    "dev": {
+        "PORT": 4000,
+        "MONGODB_URI": "mongodb://localhost:27017/GuestBook",
+        "JWT_SALT": "guestBook app"
+    }
+}
