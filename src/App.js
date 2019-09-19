@@ -5,13 +5,14 @@ import Landing from './Components/landing'
 import Login from './Components/login'
 import Signup from './Components/signup'
 import Home from './Components/home'
+import Private from './Components/private'
 
 import * as styles from './App.module.css';
 
 class App extends Component {
   state = {
     token:"",
-    logged: false
+    authenticated: true
   }
   render(){
     return(
@@ -19,7 +20,7 @@ class App extends Component {
         <Route path="/" exact component={Landing} />
         <Route path="/login" exact component={Login} />
         <Route path="/signup" exact component={Signup} />
-        <Route path="/home" exact component={Home} />
+        <Private path='/home' exact component={Home} authenticated={this.state.authenticated} />
       </div>
     )
   }

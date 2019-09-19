@@ -53,8 +53,8 @@ class signup extends Component {
         e.preventDefault();
         this.setState( { loading: true } );
         const formData = {};
-        for (let formElementIdentifier in this.state.orderForm) {
-            formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
+        for (let formElementIdentifier in this.state.Form) {
+            formData[formElementIdentifier] = this.state.Form[formElementIdentifier].value;
         }
     }
     checkValidity(value, rules) {
