@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import {withRouter} from 'react-router-dom'
 
 import Summary from './Msummary'
 import Message from './message'
@@ -29,6 +30,15 @@ class Home extends Component {
             this.setState({ messages: res.data, mounted: true })
         }).catch((e) => {
             console.log(e)
+        })
+    }
+    Logout = () =>{
+        let user = localStorage.getItem('user')
+        user = JSON.parse(user)
+        axios.delete('http://localhost:4000/users/logout', { headers: { x_auth: user.token } }).then(res =>{
+            localStorage.setItem('auth',JSON.stringify({authenticated: false}))
+            localStorage.setItem('user',JSON.stringify({}))
+            this.props.history.push('/')
         })
     }
     EditeM = (id) => {
@@ -97,7 +107,7 @@ class Home extends Component {
     render() {
         console.log(this.state.messages)
         let C = <Spinner />
-        if (this.state.mounted) {
+        if (this.state.mounted && this.state.messages.length !== 0) {
             C = (
                 <div className={styles.bot}>
                     {this.state.messages.map(message => (
@@ -112,6 +122,8 @@ class Home extends Component {
                     ))}
                 </div>
             )
+        }else{
+            C = <p>No Messages</p>
         }
         if (this.state.view) {
             C = (
@@ -144,7 +156,10 @@ class Home extends Component {
             <div className={styles.page}>
                 <div className={styles.top}>
                     <p className={styles.name}>Hello {this.props.name}</p>
-                    <button className={styles.add} onClick={this.cMessage} />
+                    <div className={styles.controls}>
+                        <button className={styles.add} onClick={this.cMessage} />
+                        <button className={styles.out} onClick={this.Logout}>Logout</button>
+                    </div>
                 </div>
                 {C}
             </div>
@@ -152,4 +167,4 @@ class Home extends Component {
     }
 }
 
-export default Home
+export default withRouter(Home)
