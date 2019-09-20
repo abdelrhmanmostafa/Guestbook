@@ -6,30 +6,38 @@
 .bot{
     height: 85%;
 }
-.body{
-    color: white;
-    height: 85%;
-    padding-top: 15px;
-}
 
-.reply{
+.header{
+    height: 15%;
+    width: 100%;
     color: white;
-    height: 85%;
-    padding-top: 15px;
+    border-bottom: 1px solid gray;
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
+}
+
+.field{
+    display: flex;
     justify-content: flex-start;
 }
-.b{
-    height: 50%;
+.field input{
+    margin-left: 10px;
+    height: 30px;
+    width: 300px;
+    border: none;
 }
+
 .text{
+    margin-top: 5px;
     width: 100%;
-    height: 80%;
+    height: 88%;
     resize: none;
+    border: none;
 }
+
 .controls{
-    height: 10%;
+    height: 9%;
     display: flex;
     justify-content: flex-end;
 }
@@ -39,14 +47,17 @@
     width: 60px;
     border: none;
     background-color: inherit;
-    color: aliceblue;
+    color: rgb(31, 146, 247);
 }
 
-.header{
-    height: 15%;
+.b{
+    height: 48%;
+}
+.reply{
     color: white;
-    border-bottom: 1px solid gray;
+    height: 85%;
+    padding-top: 15px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: flex-start;
 }

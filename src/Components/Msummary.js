@@ -4,8 +4,8 @@ import * as styles from './Msummary.module.css'
 
 const summary = props => {
     return (
-        <div className={styles.sum} onClick={props.open}>
-            <div className={styles.data}>
+        <div className={styles.sum}>
+            <div className={styles.data} onClick={props.open} >
                 <p className={styles.title}>{props.title}</p>
                 <p className={styles.sent}>{props.sentby}</p>
                 <p className={styles.date}>{props.date}</p>

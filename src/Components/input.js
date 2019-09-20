@@ -3,7 +3,6 @@ import React from 'react'
 import * as styles from './input.module.css'
 
 const Input = props =>{
-    console.log(props.touched)
     let classes = [styles.ele]
     if(props.invalid && props.touched)
         classes.push(styles.invalid)

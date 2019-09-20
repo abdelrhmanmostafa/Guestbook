@@ -7,7 +7,6 @@ var {User} = require('./models/user')
 const express = require('express')
 const bodyparser = require('body-parser')
 const cors = require('cors')
-const fs = require('fs')
 const {ObjectID} = require('mongodb')
 const _ = require('lodash')
 
@@ -15,14 +14,6 @@ var app = express()
 
 app.use(cors())
 app.use(bodyparser.json())
-/*app.use((req, res, next) =>{
-    var now = new Date().toString()
-    fs.appendFile('./backEnd/server/server.log', `${now}: ${req.method}, ${req.url} \n`, (err) =>{
-        if(err)
-            console.log('logging error')
-    })
-    next()
-})*/
 
 let Authenticate = (req, res, next) =>{
     User.findByToken(req.header('x_auth')).then((user) =>{
@@ -90,7 +81,7 @@ app.delete('/messages/:id', Authenticate, (req, res) =>{
 
 app.patch('/messages/:id', Authenticate, (req, res) =>{
     let id = req.params.id
-    let body = _.pick(req.body, ['title', 'body', 'sendto', 'sentat'])
+    let body = _.pick(req.body, ['title', 'body', 'sendTo', 'reply'])
     if(!ObjectID.isValid(id))
         return res.status(404).send()
     Message.findOneAndUpdate({_id: id, user: req.user._id}, {$set: body}, {new: true}).then((message) =>{

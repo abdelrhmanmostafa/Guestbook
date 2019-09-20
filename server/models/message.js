@@ -7,15 +7,18 @@ var Message = mongoose.model('Message',{
     },
     body:{
         type: String,
-        trim: true
+        trim: true,
+        required: true
     },
     sendTo:{
         type: String,
         required: true
     },
     sentAt:{
-        type: Number,
-        default: null
+        type: String
+    },
+    reply:{
+        type: String
     },
     user:{
         type: mongoose.Schema.Types.ObjectId,
